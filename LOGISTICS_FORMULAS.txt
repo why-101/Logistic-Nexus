@@ -1,0 +1,22 @@
+LOGISTICS BUSINESS FORMULAS & PATHING DEFINITIONS
+==================================================
+
+1. ACCOUNTANT AGENT (PROFITABILITY METRICS)
+   - Gross Revenue = Controlled by 'total_revenue' in the LOADS collection.
+   - Fuel Cost = Controlled by 'fuel_cost' in the FUEL_PURCHASES collection.
+   - Monthly Maintenance Cost = Controlled by 'total_cost' in the MAINTENANCE_RECORDS collection.
+   - PRORATING RULE: When calculating profit for a single trip or route, you MUST scale down the monthly maintenance cost to a 4-day window to avoid cost inflation.
+   - Formula: Trip Profit = total_revenue - fuel_cost - ((6 / 30) * maintenance_records.total_cost)
+   - Pathing: Join LOADS to TRIPS via 'load_id'. Then join TRIPS to FUEL_PURCHASES and MAINTENANCE_RECORDS using 'trip_id' and 'truck_id'.
+
+2. COACH AGENT (DRIVER PERFORMANCE & SAFETY)
+   - On-Time Status = Controlled strictly by 'on_time_status' inside the DELIVERY_EVENTS collection.
+   - TRIPS do NOT contain arrival flags. You MUST join TRIPS to DELIVERY_EVENTS via 'trip_id' or 'load_id'.
+   - On-Time Delivery Rate Formula: Sum of DELIVERY_EVENTS where status/on_time_status == "On-Time" divided by Total Count of Trips.
+   - Safety Incident Count = Controlled strictly by counting occurrences inside the SAFETY_INCIDENTS collection grouped by 'driver_id'.
+   - Fuel Efficiency = Controlled by 'average_mpg' inside the TRIPS collection.
+
+3. MECHANIC AGENT (FLEET MAINTENANCE & UTILIZATION)
+   - Utilization Rate = Controlled by 'utilization_rate' in the TRUCK_UTILIZATION_METRICS collection.
+   - Mileage Since Last Service = Current 'total_miles' in TRUCK_UTILIZATION_METRICS minus the maximum 'odometer_reading' in MAINTENANCE_RECORDS for that 'truck_id'.
+   - Maintenance Threshold Alert: If (total_miles - odometer_reading) > 5000, mark as "Needs Maintenance".

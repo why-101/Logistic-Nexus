@@ -1,0 +1,11 @@
+streamlit           # The web dashboard framework
+pandas              # For processing and displaying query results as tables
+pymongo             # The official MongoDB driver for Python
+dnspython           # Required for connecting to MongoDB Atlas via srv strings
+groq                # The client for the Llama 3.3-70b-versatile model
+python-dotenv       # For managing your MONGO_URI and GROQ_API_KEY from .env
+langchain
+langgraph
+langchain-groq
+pymongo
+chromadb
