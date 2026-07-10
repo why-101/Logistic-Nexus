@@ -145,5 +145,15 @@ if st.session_state.draft is not None:
                 import pygwalker as pyg
                 # We recreate the dataframe here just to ensure PyGWalker has fresh data
                 df_chart = pd.DataFrame(results)
+                # Your existing code where you create the DataFrame
+                df = pd.DataFrame(results)
+
+                # --- ADD THESE TWO LINES ---
+                # If the MongoDB '_id' column exists, convert it to a standard string
+                if '_id' in df.columns:
+                    df['_id'] = df['_id'].astype(str)
+    
+                # Now pass it to PyGWalker / Streamlit as normal
+                pyg.walk(df)
                 pyg_html = pyg.to_html(df_chart)
                 st.components.v1.html(pyg_html, height=800, scrolling=True)
